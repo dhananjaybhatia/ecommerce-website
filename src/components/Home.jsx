@@ -1,21 +1,29 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import Nav from "./Nav";
 import { Link, useSearchParams } from "react-router-dom";
 import ProductContext from "../context/ProductContext";
 import Loading from "./Loading";
 
 function Home() {
-  const { products } = useContext(ProductContext);
+  const { products, setProducts } = useContext(ProductContext);
   const [searchParams] = useSearchParams();
   const category = searchParams.get("category");
 
+  // ✅ Load products from localStorage if they exist
+  useEffect(() => {
+    const storedProducts = JSON.parse(localStorage.getItem("products"));
+    if (storedProducts) {
+      setProducts(storedProducts);
+    }
+  }, [setProducts]);
+
   const filteredProducts = category
-  ? products.filter((product) => product.category === category)
-  : products;
+    ? products.filter((product) => product.category === category)
+    : products;
 
   return products ? (
     <>
-      <Nav category={category}/>
+      <Nav category={category} />
 
       <div className="home-page w-[85%] h-full p-10 overflow-y-auto flex flex-wrap gap-4 justify-start items-start">
         {filteredProducts.map((product, id) => (

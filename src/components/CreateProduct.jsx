@@ -3,6 +3,7 @@ import Loading from "./Loading";
 import ProductContext from "../context/ProductContext";
 import Toast from "../components/Toast";
 import { Link } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 
 const CreateProduct = () => {
   const { setProducts } = useContext(ProductContext);
@@ -55,6 +56,7 @@ const CreateProduct = () => {
     setLoading(true);
 
     const product = {
+      id: uuidv4(),
       title,
       category,
       image,
@@ -64,7 +66,10 @@ const CreateProduct = () => {
 
     setProducts((prevProducts) => {
       const updatedProducts = [...prevProducts, product];
-      console.log("Updated Products:", updatedProducts);
+
+      // ✅ Store the updated product list in localStorage
+      localStorage.setItem("products", JSON.stringify(updatedProducts));
+
       return updatedProducts;
     });
 
